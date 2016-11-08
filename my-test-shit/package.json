@@ -1,0 +1,18 @@
+{
+  "name": "faerie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "babel-plugin-transform-es2015-destructuring": "^6.18.0",
+    "grunt": "^0.4.5",
+    "grunt-babel": "^6.0.0",
+    "grunt-starlight": "/home/leaf/starlight/dist/build-tools/grunt-starlight"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

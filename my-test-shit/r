@@ -1,0 +1,1 @@
+( cd ~/starlight && grunt runtime && grunt grunt-plugin && cd ~/faerie && grunt && cp ~/starlight/dist/browser/runtime.js ~/faerie/dist/runtime.js ) || cd ~/faerie
