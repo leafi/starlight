@@ -2,6 +2,7 @@ const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 export default class Scope {
 	constructor(i, variables = {}) {
+		console.info('Scope ctor i,variables', i, variables);
 		this._i = i;
 		this._variables = variables;
 	}
@@ -36,9 +37,10 @@ export default class Scope {
 		this._variables[key] += value;
 	}
 
-	extend(outerScope) {
+	extend(n) {
+		console.info('scope extend n:', n);
 		let innerVars = Object.create(this._variables);
-		let scope = new Scope(this._i + 1, innerVars);
+		let scope = new Scope(n, innerVars);
 		scope.parent = this;
 		return scope;
 	}

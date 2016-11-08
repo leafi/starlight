@@ -1,9 +1,10 @@
+import { default as T } from '../Table';
 import { default as LuaYieldError } from '../LuaYieldError';
 
-let theCoroutine = null;
+window.theCoroutine = null;
 
 export function hackCreateAndResume (funman) {
-  theCoroutine = funman;
+  window.theCoroutine = funman;
   try {
     funman();
   } catch (e) {
@@ -11,7 +12,7 @@ export function hackCreateAndResume (funman) {
       console.info('stop yield');
       console.log('REACHED ROOT!');
       window.theYield = e;
-      console.log('EXAMINE window.theYield AT WILL... (coroutine resumer was window.theCoroutine)');
+      console.log('EXAMINE window.theYield AT WILL... (coroutine resumer was global.starlight.theCoroutine)');
       return true;
     } else {
       // Not a yield? Rethrow!
@@ -20,7 +21,14 @@ export function hackCreateAndResume (funman) {
   }
 }
 
-export function yield () {
+function _yield () {
   console.info('start yield');
   throw new LuaYieldError('y i e l d i n g...');
 }
+
+export { _yield as yield };
+
+export default new T({
+  hackCreateAndResume,
+  yield: _yield
+});

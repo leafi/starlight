@@ -5,10 +5,14 @@ import { default as Table, registerLibs } from './Table';
 import { default as LuaError } from './LuaError';
 import { default as LuaYieldError } from './LuaYieldError';
 
+window.StackTrace = require('stacktrace-js');
 
 function ensureArray(value) {
 	return (value instanceof Array) ? value : [value];
 }
+
+let namespace = global.starlight = global.starlight || {};
+let _G = globals;
 
 function call(scope, f, ...args) {
 	if (!(f instanceof Function)) {
@@ -30,14 +34,16 @@ function call(scope, f, ...args) {
 
 	let fret = null;
 
-	if (theCoroutine === null) {
+	if (window.theCoroutine === null) {
 		fret = f(...args);
 	} else {
 		try {
 			fret = f(...args);
 		} catch (e) {
 			if (e instanceof LuaYieldError) {
-				e.attachState(fun, scope, args);
+				e.attachState(f, scope, args);
+				// continue on your merry quest, sweet yieldo...~
+				throw e;
 			} else {
 				// rethrow
 				throw e;
@@ -48,8 +54,6 @@ function call(scope, f, ...args) {
 	return ensureArray(fret);
 }
 
-let namespace = global.starlight = global.starlight || {};
-let _G = globals;
 
 function init () {
 	let userEnv = namespace.config && namespace.config.env;

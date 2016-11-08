@@ -198,7 +198,7 @@ const GENERATORS = {
 		let paramStr = params.join(';\n');
 		let body = this.Chunk(node, scope);
 		let prefix = isAnonymous? '' : 'func$';
-		let funcDef = `(__star_tmp = function ${prefix}${name}(...args){${scopeDef}\n${paramStr};\n${body} return [];}, __star_tmp.toString=()=>'function: 0x${(++functionIndex).toString(16)}', __star_tmp)`;
+		let funcDef = `(__star_tmp = function ${prefix}${name}(...args){${scopeDef}\n${paramStr};\n${body} return [];}, __star_tmp.realToString=__star_tmp.toString, __star_tmp.toString=()=>'function: 0x${(++functionIndex).toString(16)}', __star_tmp)`;
 
 		if (isAnonymous) {
 			return funcDef;
@@ -457,7 +457,7 @@ function parseExpressionList(expressionNodeArray, scope) {
 
 function extendScope(outerIndex) {
 	let scope = scopeIndex++;
-	let scopeDef = `let $${scope} = $${outerIndex}.extend(), $ = $${scope};`;
+	let scopeDef = `let $${scope} = $${outerIndex}.extend(${scope}), $ = $${scope};`;
 	return { scope, scopeDef };
 }
 
