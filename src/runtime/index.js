@@ -3,13 +3,14 @@ import { default as globals, type } from './lib/globals';
 import { default as operators } from './operators';
 import { default as Table, registerLibs } from './Table';
 import { default as LuaError } from './LuaError';
+import { default as LuaYieldError } from './LuaYieldError';
 
 
 function ensureArray(value) {
 	return (value instanceof Array) ? value : [value];
 }
 
-function call(f, ...args) {
+function call(scope, f, ...args) {
 	if (!(f instanceof Function)) {
 		if (f instanceof Table) {
 			let mt, mm;
@@ -27,7 +28,24 @@ function call(f, ...args) {
 		}
 	}
 
-	return ensureArray(f(...args));
+	let fret = null;
+
+	if (theCoroutine === null) {
+		fret = f(...args);
+	} else {
+		try {
+			fret = f(...args);
+		} catch (e) {
+			if (e instanceof LuaYieldError) {
+				e.attachState(fun, scope, args);
+			} else {
+				// rethrow
+				throw e;
+			}
+		}
+	}
+
+	return ensureArray(fret);
 }
 
 let namespace = global.starlight = global.starlight || {};
@@ -46,7 +64,7 @@ function init () {
 init();
 
 let runtime = namespace.runtime = {
-	globalScope: new Scope(globals.strValues),
+	globalScope: new Scope(0, globals.strValues),
 	_G,
 	op: operators,
 	T: Table,
@@ -58,6 +76,9 @@ let runtime = namespace.runtime = {
 
 
 // The following should be configurable
+
+import { default as coroutine } from './lib/coroutine';
+_G.set('coroutine', coroutine);
 
 import { default as math } from './lib/math';
 _G.set('math', math);

@@ -59,6 +59,8 @@ const GENERATORS = {
 		let right = scoped(node.right, scope);
 		let operator = BIN_OP_MAP[node.operator];
 
+		// LEAFI COROUTINE TODO
+
 		if (isCallExpression(node.left)) {
 			left += '[0]';
 		}
@@ -104,7 +106,7 @@ const GENERATORS = {
 			args.unshift(`${functionName}`);
 		}
 
-		return `__star_call(${args})`;
+		return `__star_call($${scope}, ${args})`;
 	},
 
 
@@ -344,12 +346,12 @@ const GENERATORS = {
 		let args = [generate(node.arguments, scope)];
 
 		if (isCallExpression(node.base)) {
-			return `__star_call(${functionName}[0],${args})`;
+			return `__star_call($${scope}, ${functionName}[0],${args})`;
 		} else {
 			if (functionName instanceof MemExpr && node.base.indexer === ':') {
 				args.unshift(functionName.base);
 			}
-			return `__star_call(${functionName},${args})`;
+			return `__star_call($${scope}, ${functionName},${args})`;
 		}
 	},
 
@@ -363,6 +365,8 @@ const GENERATORS = {
 			return generate(field, scope);
 		}).join(';\n');
 
+		// LEAFI COROUTINE TODO (method calls on the right hand side?)
+
 		return `new __star_T(t => {${fields}})`;
 	},
 
@@ -370,6 +374,9 @@ const GENERATORS = {
 	TableKeyString(node, scope) {
 		let name = generate(node.key, scope);
 		let value = scoped(node.value, scope);
+
+		// LEAFI COROUTINE TODO (metamethod __newindex)
+
 		return `Tset(t, '${name}', ${value})`;
 	},
 
@@ -377,12 +384,18 @@ const GENERATORS = {
 	TableKey(node, scope) {
 		let name = scoped(node.key, scope);
 		let value = scoped(node.value, scope);
+
+		// LEAFI COROUTINE TODO (metamethod __newindex)
+
 		return `Tset(t, ${name}, ${value})`;
 	},
 
 
 	TableValue(node, scope, isLastItem) {
 		let value = scoped(node.value, scope);
+
+		// LEAFI COROUTINE TODO (metamethod __newindex?)
+
 		if (isCallExpression(node.value)) {
 			value = isLastItem ? `...${value}` : `${value}[0]`;
 		}
@@ -393,6 +406,8 @@ const GENERATORS = {
 	UnaryExpression(node, scope) {
 		let operator = UNI_OP_MAP[node.operator];
 		let argument = scoped(node.argument, scope);
+
+		// LEAFI COROUTINE TODO
 
 		if (isCallExpression(node.argument)) {
 			argument += '[0]';
@@ -408,6 +423,8 @@ const GENERATORS = {
 
 
 	VarargLiteral(node) {
+		// LEAFI COROUTINE TODO (don't know how varargs work)
+
 		return '...$.getVarargs()';
 	},
 
@@ -447,6 +464,9 @@ function extendScope(outerIndex) {
 
 function scoped(node, scope) {
 	let value = generate(node, scope);
+
+	// LEAFI MAYBE COROUTINE TODO (metatable __index?)
+
 	return node.type === 'Identifier' ? `$get($, '${value}')` : value;
 }
 

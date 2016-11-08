@@ -196,7 +196,9 @@ export function pairs(table) {
 export function pcall(func, ...args) {
 	let result;
 
-	try {			
+	// LEAFI COROUTINE TODO
+
+	try {
 		if (typeof func == 'function') {
 			result = func(...args);
 		} else {
@@ -401,7 +403,9 @@ export function unpack(table, i = 1, j) {
 
 export function xpcall(func, err) {
 	let result, success, invalid;
-		
+
+	// LEAFI COROUTINE TODO
+
 	try {
 		if (typeof func === 'function') {
 			result = func();
