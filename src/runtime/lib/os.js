@@ -4,7 +4,7 @@ import { default as T } from '../Table';
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-		
+
 const DATE_FORMAT_HANDLERS = {
 	'%a': (d, utc) => DAYS[d['get' + (utc? 'UTC' : '') + 'Day']()].substr(0, 3),
 	'%A': (d, utc) => DAYS[d['get' + (utc? 'UTC' : '') + 'Day']()],
@@ -17,7 +17,7 @@ const DATE_FORMAT_HANDLERS = {
 	'%j': (d, utc) => {
 		let result = d['get' + (utc? 'UTC' : '') + 'Date']();
 		let m = d['get' + (utc? 'UTC' : '') + 'Month']();
-			
+
 		for (let i = 0; i < m; i++) {
 			result += DAYS_IN_MONTH[i];
 		}
@@ -47,13 +47,13 @@ const DATE_FORMAT_HANDLERS = {
 function isDST(date) {
 	let year = date.getFullYear();
 	let jan = new Date(year, 0);
-		
+
 	// ASSUMPTION: If the time offset of the date is the same as it would be in January of the same year, DST is not in effect.
 	return (date.getTimezoneOffset() !== jan.getTimezoneOffset());
 }
 
 
-function getWeekOfYear (d, firstDay, utc) { 
+function getWeekOfYear (d, firstDay, utc) {
 	let dayOfYear = parseInt(DATE_FORMAT_HANDLERS['%j'](d), 10);
 	let jan1 = new Date(d.getFullYear (), 0, 1, 12);
 	let offset = (8 - jan1['get' + (utc? 'UTC' : '') + 'Day']() + firstDay) % 7;
@@ -75,7 +75,7 @@ export function date(format = '%c', time) {
 		utc = true;
 	}
 
-	if (format === '*t') {		
+	if (format === '*t') {
 		return new T ({
 			year: parseInt(DATE_FORMAT_HANDLERS['%Y'](date, utc), 10),
 			month: parseInt(DATE_FORMAT_HANDLERS['%m'](date, utc), 10),
@@ -86,7 +86,7 @@ export function date(format = '%c', time) {
 			wday: parseInt(DATE_FORMAT_HANDLERS['%w'](date, utc), 10) + 1,
 			yday: parseInt(DATE_FORMAT_HANDLERS['%j'](date, utc), 10),
 			isdst: isDST(date)
-		});	
+		});
 	}
 
 	for (let i in DATE_FORMAT_HANDLERS) {

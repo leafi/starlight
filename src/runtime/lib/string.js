@@ -3,11 +3,11 @@ import { default as LuaError } from '../LuaError';
 import { tostring } from './string';
 import printf from 'printf';
 
-import { 
-	coerceToNumber, 
-	coerceToString, 
+import {
+	coerceToNumber,
+	coerceToString,
 	coerceToBoolean,
-	coerceArgToNumber, 
+	coerceArgToNumber,
 	coerceArgToString,
 	coerceArgToFunction
 } from '../utils';
@@ -76,9 +76,9 @@ function translatePattern (pattern) {
 			pattern = pattern.substr(0, i) + pattern.substr(i++ + 1);
 			l++;
 		}
-	}		
+	}
 
-	return pattern;	
+	return pattern;
 }
 
 
@@ -91,7 +91,7 @@ export function byte(s, i = 1, j) {
 	} else {
 		j = coerceArgToNumber(j, 'byte', 3);
 	}
-	
+
 	return s.substring(i - 1, j).split('').map(c => c.charCodeAt(0));
 }
 
@@ -121,16 +121,16 @@ export function find(s, pattern, init = 1, plain = false) {
 		pattern = translatePattern(pattern);
 		let reg = new RegExp(pattern);
 		let index = s.substr(init - 1).search(reg);
-		
+
 		if (index < 0) return;
-		
+
 		let match = s.substr(init - 1).match(reg);
 		let result = [index + init, index + init + match[0].length - 1];
 
 		match.shift();
 		return result.concat(match);
 	}
-	
+
 	// Plain
 	let index = s.indexOf(pattern, init - 1);
 	return (index === -1)? void 0 : [index + 1, index + pattern.length];
@@ -161,7 +161,7 @@ export function gmatch(s, pattern) {
 
 		groups.shift();
 		return groups.length? groups : match;
-	};				
+	};
 }
 
 
@@ -181,8 +181,8 @@ export function gsub(s, pattern, repl, n = Infinity) {
 		lastMatch;
 
 	while (
-		count < n 
-		&& s 
+		count < n
+		&& s
 		&& (match = s.match(pattern))
 	) {
 		if (replIsFunction) {
@@ -192,10 +192,10 @@ export function gsub(s, pattern, repl, n = Infinity) {
 
 		} else if (repl instanceof T) {
 			str = repl.get(match[0]);
-			
+
 		} else if (typeof repl == 'object') {
 			str = repl[match];
-			
+
 		} else {
 			str = `${repl}`.replace(/%([0-9])/g, (m, i) => match[i]);
 
@@ -206,7 +206,7 @@ export function gsub(s, pattern, repl, n = Infinity) {
 			 	prefix = '';
 			} else {
 				prefix = s.substr(0, 1);
-			} 
+			}
 
 		} else {
 			prefix = s.substr(0, match.index);
@@ -242,7 +242,7 @@ export function match(s, pattern, init = 0) {
 
 	s = s.substr(init);
 	let matches = s.match(new RegExp(translatePattern (pattern)));
-	
+
 	if (!matches) {
 		return;
 	} else if (!matches[1]) {
@@ -282,7 +282,7 @@ export function sub(s, i = 1, j) {
 	} else if (i < 0) {
 		i = s.length + i;
 	}
-	
+
 	if (j < 0) {
 		j = s.length + j + 1;
 	}
@@ -299,7 +299,7 @@ export function upper(s) {
 
 
 const string = new T({
-	byte, 
+	byte,
 	char,
 	dump,
 	find,

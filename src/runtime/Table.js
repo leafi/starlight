@@ -63,7 +63,7 @@ export default class Table {
 		if (value === void 0) {
 			let mt, mm;
 			if (
-				(mt = this.metatable) 
+				(mt = this.metatable)
 				&& (mm = mt.get('__index'))
 			) {
 				switch (mm.constructor) {
@@ -105,7 +105,7 @@ export default class Table {
 
 		let mt, mm;
 		if (
-			(mt = this.metatable) 
+			(mt = this.metatable)
 			&& (mm = mt.get('__newindex'))
 		) {
 			let oldValue;
@@ -163,7 +163,7 @@ export default class Table {
 					index = keys.length;
 					keys[index] = key;
 				}
-				
+
 				this.values[index] = value;
 		}
 	}
@@ -177,7 +177,7 @@ export default class Table {
 	toString() {
 		let mt, mm;
 		if (
-			(mt = this.metatable) 
+			(mt = this.metatable)
 			&& (mm = mt.get('__tostring'))
 		) {
 			return mm(this)[0];
@@ -192,7 +192,7 @@ export default class Table {
     const result = isArr? [] : {};
     const numValues = this.numValues;
     const strValues = this.strValues;
-    
+
     let i;
     const l = numValues.length;
 
@@ -207,7 +207,7 @@ export default class Table {
         result[i] = (propValue instanceof Table)? propValue.toObject() : propValue;
       }
     }
-      
+
     return result;
   }
 

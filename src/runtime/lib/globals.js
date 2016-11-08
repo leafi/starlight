@@ -3,12 +3,12 @@ import { default as LuaError } from '../LuaError';
 import { default as stringLib, metatable as stringMetatable } from './string';
 import { getn } from './table';
 
-import { 
+import {
 	stdout,
-	coerceToNumber, 
-	coerceToString, 
+	coerceToNumber,
+	coerceToString,
 	coerceToBoolean,
-	coerceArgToNumber, 
+	coerceArgToNumber,
 	coerceArgToString,
 	coerceArgToTable
 } from '../utils';
@@ -60,12 +60,12 @@ export function assert(v, m) {
 
 export function error(message) {
 	if (
-		typeof message !== 'string' 
+		typeof message !== 'string'
 		&& typeof message !== 'number'
 	) {
 		message = '(error object is not a string)';
 	}
-	throw new LuaError(message);	
+	throw new LuaError(message);
 }
 
 
@@ -127,14 +127,14 @@ export function next(table, index) {
 		if ('keys' in Object) {
 			// Use Object.keys, if available.
 			let keys = Object['keys'](numValues);
-			
+
 			if (found) {
 				// First pass
 				i = 1;
 
 			} else if (i = keys.indexOf('' + index) + 1) {
 				found = true;
-			} 
+			}
 
 			if (found) {
 				while ((key = keys[i]) !== void 0 && (value = numValues[key]) === void 0) i++;
@@ -144,19 +144,19 @@ export function next(table, index) {
 		} else {
 			// Else use for-in (faster than for loop on tables with large holes)
 
-			for (l in numValues) {	
+			for (l in numValues) {
 				i = l >> 0;
 
 				if (!found) {
 					if (i === index) found = true;
-	
+
 				} else if (numValues[i] !== void 0) {
 					return [i, numValues[i]];
 				}
 			}
 		}
 	}
-	
+
 	for (i in table.strValues) {
 		if (table.strValues.hasOwnProperty(i)) {
 			if (!found) {
@@ -206,7 +206,7 @@ export function pcall(func, ...args) {
 	} catch (e) {
 		return [false, e && e.toString()];
 	}
-	
+
 	result = [].concat(result);
 	return [true, ...result];
 }
@@ -241,7 +241,7 @@ export function rawset(table, index, value) {
 export function _require(modname) {
 	modname = coerceArgToString(modname, 'require', 1);
 	modname = modname.replace(/\//g, '.');
-	
+
 	let [preload, loaded] = getPackageMethods();
 	let mod = loaded.rawget(modname);
 
@@ -263,13 +263,13 @@ export function _require(modname) {
 }
 
 
-export function select(index, ...args) {	
+export function select(index, ...args) {
 	if (index === '#') {
 		return args.length;
-		
+
 	} else if (index = parseInt(index, 10)) {
 		return args.slice(index - 1);
-		
+
 	} else {
 		let typ = type(index);
 		throw new LuaError(`bad argument #1 to 'select' (number expected, got ${typ})`);
@@ -288,7 +288,7 @@ export function setmetatable(table, metatable) {
 
 	let mt;
 	if (
-		(mt = table.metatable) 
+		(mt = table.metatable)
 		&& mt.rawget('__metatable')
 	) {
 		throw new LuaError('cannot change a protected metatable');
@@ -328,7 +328,7 @@ export function tonumber(e, base = 10) {
 	// If using base 16, ingore any "0x" prefix
 	let match;
 	if (
-		base === 16 
+		base === 16
 		&& (match = e.match(/^(\-)?0[xX](.+)$/))
 	) {
 		e = `${match[1] || ''}${match[2]}`;
@@ -345,9 +345,9 @@ export function tostring(e) {
 	let mt, mm;
 
 	if (
-		e !== void 0 
-		&& e instanceof T 
-		&& (mt = e.metatable) 
+		e !== void 0
+		&& e instanceof T
+		&& (mt = e.metatable)
 		&& (mm = mt.rawget('__tostring'))
 	) {
 		return mm.call(mm, e);
@@ -367,19 +367,19 @@ export function type(v) {
 	let t = typeof v;
 
 	switch (t) {
-		case 'undefined': 
+		case 'undefined':
 			return 'nil';
-		
-		case 'number': 
-		case 'string': 
-		case 'boolean': 
-		case 'function': 
+
+		case 'number':
+		case 'string':
+		case 'boolean':
+		case 'function':
 			return t;
-		 
-		case 'object': 
+
+		case 'object':
 			if (v.constructor === T) return 'table';
 			if (v && v instanceof Function) return 'function';
-		
+
 			return 'userdata';
 	}
 }
@@ -394,7 +394,7 @@ export function unpack(table, i = 1, j) {
 	} else {
 		j = coerceArgToNumber(j, 'unpack', 3);
 	}
-	
+
 	return table.numValues.slice(i, j + 1);
 }
 
@@ -409,14 +409,14 @@ export function xpcall(func, err) {
 			invalid = true;
 		}
 		success = true;
-		
+
 	} catch (e) {
 		result = err(void 0, true)[0];
 		success = false;
 	}
 
 	if (invalid) throw new LuaError('Attempt to call non-function');
-	
+
 	if (!(result && result instanceof Array)) result = [result];
 	result.unshift(success);
 

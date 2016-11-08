@@ -115,24 +115,24 @@ export function coerceToNumber(val, errorMessage) {
  */
 export function coerceToString(val, errorMessage) {
 	switch(true) {
-		case typeof val == 'string': 
+		case typeof val == 'string':
 			return val;
 
 		case val === void 0:
-		case val === null: 
+		case val === null:
 			return 'nil';
-		
-		case val === Infinity: 
+
+		case val === Infinity:
 			return 'inf';
 
-		case val === -Infinity: 
+		case val === -Infinity:
 			return '-inf';
 
-		case typeof val == 'number': 
-		case typeof val == 'boolean': 
+		case typeof val == 'number':
+		case typeof val == 'boolean':
 			return global.isNaN(val)? 'nan' : `${val}`;
 
-		default: 
+		default:
 			return throwCoerceError(val, errorMessage) || 'userdata';
 	}
 }
@@ -168,6 +168,3 @@ export function coerceArgToFunction(value, funcName, index) {
 		throw new LuaError(`bad argument #${index} to '${funcName}' (function expected, got ${typ})`);
 	}
 }
-
-
-

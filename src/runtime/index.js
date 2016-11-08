@@ -75,4 +75,3 @@ import { default as _package } from './lib/package';
 _G.set('package', _package);
 
 registerLibs({ string, getn });
-

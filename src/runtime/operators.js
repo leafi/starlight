@@ -10,7 +10,7 @@ function binaryArithmetic(left, right, metaMethodName, callback) {
 	if ((left && left instanceof T && (mt = left.metatable) && (f = mt.rawget(metaMethodName)))
 	|| (right && right instanceof T && (mt = right.metatable) && (f = mt.rawget(metaMethodName)))) {
 		return f(left, right)[0];
-	} 
+	}
 
 	if (typeof left !== 'number') {
 		left = coerceToNumber(left, 'attempt to perform arithmetic on a %type value');
@@ -51,12 +51,12 @@ function concat(left, right) {
 function equal(left, right) {
 	var mtl, mtr, f, result;
 
-	if (right !== left 
-		&& left && left instanceof T 
-		&& right && right instanceof T 
-		&& (mtl = left.metatable) 
-		&& (mtr = right.metatable) 
-		&& mtl === mtr 
+	if (right !== left
+		&& left && left instanceof T
+		&& right && right instanceof T
+		&& (mtl = left.metatable)
+		&& (mtr = right.metatable)
+		&& mtl === mtr
 		&& (f = mtl.rawget('__eq'))
 	) {
 		return !!f(left, right)[0];
@@ -68,10 +68,10 @@ function equal(left, right) {
 
 function mod(left, right) {
 	if (
-		right === 0 
-		|| right === -Infinity 
-		|| right === Infinity 
-		|| global.isNaN(left) 
+		right === 0
+		|| right === -Infinity
+		|| right === Infinity
+		|| global.isNaN(left)
 		|| global.isNaN(right)
 	) {
 		return NaN;
@@ -92,7 +92,7 @@ function len(value) {
 
 	if (value === undefined) throw new LuaError('attempt to get length of a nil value');
 	if (value instanceof T) return getn(value);
-	
+
 	if (typeof value == 'object') {
 		let length = 0;
 		for (let key in value) {
@@ -101,7 +101,7 @@ function len(value) {
 			}
 		}
 		return length;
-	} 
+	}
 
 	return value.length;
 }
@@ -144,11 +144,11 @@ const op = {
 	pow: (left, right) => binaryArithmetic(left, right, '__pow', Math.pow),
 	lt: (left, right) => binaryStringArithmetic(left, right, '__lt', (l, r) => l < r),
 	lte: (left, right) => binaryStringArithmetic(left, right, '__le', (l, r) => l <= r),
-	
+
 	gt(left, right) {
 		return !op.lte(left, right);
 	},
-	
+
 	gte(left, right) {
 		return !op.lt(left, right);
 	}

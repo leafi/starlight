@@ -1,6 +1,6 @@
 import { default as T } from '../Table';
 import { default as LuaError } from '../LuaError';
-import { 
+import {
 	coerceToNumber,
 	coerceToBoolean,
 	coerceArgToNumber,
@@ -29,7 +29,7 @@ export function concat(table, sep = '', i = 1, j) {
 export function getn(table) {
 	table = coerceArgToTable(table, 'getn', 1);
 
-	let vals = table.numValues, 
+	let vals = table.numValues,
 		keys = [],
 		j = 0;
 
@@ -82,7 +82,7 @@ export function maxn(table) {
 	table = coerceArgToTable(table, 'maxn', 1);
 	return table.numValues.length - 1;
 }
-		
+
 
 export function remove(table, index) {
 	table = coerceArgToTable(table, 'remove', 1);
@@ -98,7 +98,7 @@ export function remove(table, index) {
 	if (index === void 0) {
 		index = max;
 	}
-				
+
 	let result = vals.splice(index, 1);
 	while (index < max && vals[index] === void 0) {
 		delete vals[index++];
